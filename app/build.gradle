@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+// 多渠道使用walle示例（注：多渠道使用）
+//apply from: 'multiple-channel.gradle'
+apply plugin: 'walle'
+android {
+    signingConfigs {
+        debug {
+            keyAlias 'wcw'
+            keyPassword '111111'
+            storeFile file('C:/Users/sandy/Desktop/Desktop/jar/wall.jks')
+            storePassword '111111'
+        }
+        release {
+            keyAlias 'wcw'
+            keyPassword '111111'
+            storeFile file('C:/Users/sandy/Desktop/Desktop/jar/wall.jks')
+            storePassword '111111'
+        }
+    }
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.example.wcw.kotlinproject"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 112
+        versionName "1.1.2"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        /*release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }*/
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+
+    }
+
+
+}
+
+dependencies {
+    implementation 'com.meituan.android.walle:library:1.1.4'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '${appName}-${channel}-${buildType}-v${versionName}-${versionCode}-${buildTime}.apk';
+    // 渠道配置文件
+    channelFile = new File("${project.getProjectDir()}/channel")
+}
